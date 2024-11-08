@@ -6,6 +6,7 @@ const AddUserForm = () => {
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
 
   const handleAddUser = async (e) => {
@@ -28,6 +29,29 @@ const AddUserForm = () => {
       console.error('Error details:', err.response?.data);
     }
   };
+
+const handleGenerateOtp = async () => {
+
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(
+      'http://localhost:5000/api/admin/generate-otp',
+      { username }, // Ensure username is correctly passed here
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    setOtp(response.data.otp); // Set OTP from response
+  } catch (error) {
+    console.error("Error generating OTP:", error);
+    setMessage('Error generating OTP');
+  }
+};
+
+
 
   return (
     <div className="add-user-wrapper">
@@ -61,8 +85,10 @@ const AddUserForm = () => {
           />
         </div>
         <button type="submit">Add User</button>
+        <button type="button" onClick={handleGenerateOtp}>Generate OTP</button> {/* OTP button */}
       </form>
       {message && <p className="error">{message}</p>}
+      {otp && <p>Generated OTP: {otp}</p>} {/* Display OTP */}
     </div>
   );
 };

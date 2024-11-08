@@ -1,3 +1,4 @@
+// src/components/AdminDashboard/AdminDashboard.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import './AdminDashboard.css';
 import axios from 'axios';
@@ -7,6 +8,7 @@ import AddUserForm from "../AddUserForm/AddUserForm";
 import ChangePasswordForm from "../ChangeAdminPassword/ChangeAdminPassword";
 import SafetySettingsForm from "../SafetySettingsForm/SafetySettingsForm"; 
 import EditUserForm from "../EditUser/EditUserForm";
+import ActivityLogs from "../ActivityLogs/ActivityLogs"; // Import ActivityLogs component
 
 const AdminDashboard = ({ onLogout }) => {
   const [users, setUsers] = useState([]);
@@ -15,6 +17,7 @@ const AdminDashboard = ({ onLogout }) => {
   const [safetySettingsUser, setSafetySettingsUser] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [showAdminDashboard, setShowAdminDashboard] = useState(true); // State to manage visibility
+  const [showActivityLogs, setShowActivityLogs] = useState(false); // New state to toggle ActivityLogs view
 
   const navigate = useNavigate();
 
@@ -78,6 +81,12 @@ const AdminDashboard = ({ onLogout }) => {
     setSafetySettingsUser(null);
     setEditingUser(null);
     setShowAdminDashboard(true); // Show admin dashboard
+    setShowActivityLogs(false); // Hide activity logs view
+  }, []);
+
+  const handleShowActivityLogs = useCallback(() => {
+    setShowActivityLogs(true); // Show activity logs view
+    setShowAdminDashboard(false); // Hide admin dashboard view
   }, []);
 
   if (isLoading) {
@@ -89,7 +98,7 @@ const AdminDashboard = ({ onLogout }) => {
       <h1 className="admin">Admin Dashboard</h1>
       {error && <p className="error">{error}</p>}
 
-      {showAdminDashboard ? ( // Check if the dashboard should be shown
+      {showAdminDashboard ? ( // Check if the main dashboard should be shown
         <>
           {safetySettingsUser ? (
             <SafetySettingsForm 
@@ -116,10 +125,13 @@ const AdminDashboard = ({ onLogout }) => {
               <button className="small-button" onClick={handleToggleChangePasswordForm}>
                 Change Admin Password
               </button>
+              <button className="small-button" onClick={handleShowActivityLogs}>View Activity Logs</button>
               <button className="small-button" onClick={handleLogout}>Logout</button>
             </>
           )}
         </>
+      ) : showActivityLogs ? (
+        <ActivityLogs onBack={handleBackToDashboard} /> // Render ActivityLogs when showActivityLogs is true
       ) : (
         <ChangePasswordForm 
           onPasswordChange={fetchUsers} 

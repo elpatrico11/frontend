@@ -1,0 +1,26 @@
+.activity-logs {
+    margin: 20px;
+}
+
+.activity-logs table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.activity-logs th,
+.activity-logs td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.activity-logs th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.small-button {
+    margin: 10px 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
