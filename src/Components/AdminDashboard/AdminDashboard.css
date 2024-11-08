@@ -1,0 +1,74 @@
+/* Wrapper for the dashboard */
+.wrapper {
+    width: 100%;
+    max-width: 1400px;
+    /* Increased max width */
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    backdrop-filter: blur(30px);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+    margin: 20px auto;
+    display: flex;
+    /* Use flexbox to center content */
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: center;
+    /* Center children horizontally */
+}
+
+.admin {
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Heading style */
+.wrapper h1 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Button styles */
+.wrapper button {
+    width: auto;
+    /* Set width to auto for general buttons */
+    height: 45px;
+    background: #bb9595;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 700;
+    margin: 20px 0 15px;
+    padding: 10px 20px;
+    /* Added padding */
+}
+
+/* Small button styles for specific buttons */
+.small-button {
+    width: auto;
+    /* Set width to auto for small buttons */
+    margin: 10px;
+    /* Add margin for spacing */
+}
+
+/* Error message style */
+.error {
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Additional styles for lists */
+.user-list {
+    margin-top: 20px;
+}

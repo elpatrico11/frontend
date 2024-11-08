@@ -1,0 +1,83 @@
+.add-user-wrapper {
+    width: 420px;
+    /* Adjust as needed */
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    backdrop-filter: blur(30px);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.add-user-wrapper h1 {
+    font-size: 32px;
+    /* Keep or adjust as needed */
+    text-align: center;
+    margin-bottom: 20px;
+    /* Additional margin */
+}
+
+.add-user-wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    /* Keep or adjust as needed */
+    margin: 30px 0;
+    /* Keep or adjust as needed */
+}
+
+.add-user-wrapper .input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 16px;
+    /* Keep or adjust as needed */
+    color: #fff;
+    padding: 20px 45px 20px 20px;
+    /* Keep or adjust as needed */
+}
+
+.add-user-wrapper .input-box input::placeholder {
+    color: #fff;
+}
+
+.add-user-wrapper .input-box .icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    /* Keep or adjust as needed */
+}
+
+.add-user-wrapper button {
+    width: 100%;
+    height: 45px;
+    /* Keep or adjust as needed */
+    background: #d1bbbb;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    /* Keep or adjust as needed */
+    color: #333;
+    font-weight: 700;
+    margin: 20px 0 15px;
+    /* Keep or adjust as needed */
+}
+
+.add-user-wrapper .error {
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    /* Keep or adjust as needed */
+    text-align: center;
+    margin-top: 10px;
+    /* Keep or adjust as needed */
+}

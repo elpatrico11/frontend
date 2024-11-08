@@ -1,0 +1,116 @@
+.safety-settings-container {
+    max-width: 400px;
+    /* Width for compactness */
+    margin: 0 auto;
+    padding: 15px;
+    /* Reduced padding */
+}
+
+.safety-settings-container h2 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 20px;
+    /* Slightly smaller font */
+}
+
+.requirements-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Reduced gap */
+    margin-bottom: 15px;
+    /* Reduced margin */
+}
+
+.requirements-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Reduced gap */
+    font-size: 14px;
+    /* Slightly smaller font */
+    cursor: pointer;
+}
+
+.requirements-group input[type="checkbox"] {
+    width: 16px;
+    /* Slightly smaller checkbox */
+    height: 16px;
+    /* Slightly smaller checkbox */
+    cursor: pointer;
+}
+
+.expiry-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* Reduced gap */
+}
+
+.expiry-input-container label {
+    font-size: 14px;
+    /* Consistent font size */
+}
+
+.expiry-days-input {
+    width: 100%;
+    /* Full width */
+    height: 36px;
+    /* Consistent height with other inputs */
+    padding: 6px;
+    /* Padding for comfort */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    /* Slightly smaller font */
+    box-sizing: border-box;
+    /* Include padding in width */
+}
+
+.error-message {
+    color: #d32f2f;
+    margin: 8px 0;
+    /* Reduced margin */
+    padding: 8px;
+    /* Reduced padding */
+    background-color: #ffebee;
+    border-radius: 4px;
+    font-size: 14px;
+    /* Slightly smaller font */
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    /* Reduced gap */
+    margin-top: 15px;
+    /* Reduced margin */
+}
+
+.button-group button {
+    padding: 8px 15px;
+    /* Reduced padding */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    /* Adjusted font size */
+}
+
+.button-group button[type="submit"] {
+    background-color: #1976d2;
+    color: white;
+}
+
+.button-group button[type="button"] {
+    background-color: #757575;
+    color: white;
+}
+
+.button-group button[type="submit"]:hover {
+    background-color: #1565c0;
+}
+
+.button-group button[type="button"]:hover {
+    background-color: #616161;
+}

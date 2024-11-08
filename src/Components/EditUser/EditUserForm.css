@@ -1,0 +1,70 @@
+/* Container styling for the Edit User form */
+.edit-user-container {
+    width: 100%;
+    max-width: 600px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(25px);
+    border-radius: 10px;
+    padding: 30px;
+    color: #fff;
+    margin: 20px auto;
+}
+
+/* Header styling */
+.edit-user-container h2 {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Label and input styling */
+.edit-user-container label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.edit-user-container input[type="text"],
+.edit-user-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Button styling */
+.edit-user-container button {
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    color: #333;
+    font-weight: 700;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.edit-user-container button[type="button"] {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Error message styling */
+.edit-user-error {
+    color: red;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+}

@@ -1,0 +1,68 @@
+/* Wrapper for UserList */
+.user-list-wrapper {
+    width: 100%;
+    max-width: 800px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    color: #fff;
+    border-radius: 10px;
+    padding: 20px 30px;
+    margin: 20px auto;
+}
+
+/* Heading style for UserList */
+.user-list-wrapper h2 {
+    font-size: 28px;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Styling individual users in the list */
+.user-list-wrapper ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-list-wrapper li {
+    display: flex;
+    justify-content: space-between;
+    /* Space between username and button container */
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    color: #ddd;
+}
+
+/* Button container styling */
+.button-container {
+    margin-left: auto;
+    /* Push buttons to the right */
+}
+
+/* Button styling within UserList */
+.user-list-wrapper button {
+    background: #d1bbbb;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    margin-left: 5px;
+    padding: 8px 15px;
+    /* Adjusted padding */
+    transition: background 0.3s;
+}
+
+.user-list-wrapper button:hover {
+    background: #f1f1f1;
+    color: #222;
+}
