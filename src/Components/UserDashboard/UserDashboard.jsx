@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './UserDashboard.css'; // Import the CSS file
+import CountdownTimer from '../CountdownTimer/CountdownTimer';
+import './UserDashboard.css';
 
 const UserDashboard = ({ onLogout }) => {
   const [oldPassword, setOldPassword] = useState('');
@@ -9,25 +10,36 @@ const UserDashboard = ({ onLogout }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isFirstLogin, setIsFirstLogin] = useState(false);
+  const [hasChangedPassword, setHasChangedPassword] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('token');
+    onLogout();
+    navigate('/login');
+  }, [onLogout, navigate]);
 
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:5000/api/user/status', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { 'Authorization': `Bearer ${token}` },
         });
+
         setIsFirstLogin(response.data.isFirstLogin);
+        setHasChangedPassword(response.data.hasChangedPassword);
       } catch (err) {
-        console.error('Error checking user status:', err);
+        if (err.response && err.response.status === 401) {
+          handleLogout(); // Log out on session expiration
+        } else {
+          console.error('Error checking user status:', err);
+        }
       }
     };
 
     checkUserStatus();
-  }, []);
+  }, [handleLogout]);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -38,37 +50,27 @@ const UserDashboard = ({ onLogout }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post('http://localhost:5000/api/user/change-password', 
-        {
-          oldPassword,
-          newPassword,
-          isFirstLogin,
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        }
+        { oldPassword, newPassword, isFirstLogin },
+        { headers: { 'Authorization': `Bearer ${token}` } }
       );
       setMessage(response.data.message);
       if (isFirstLogin) {
         setIsFirstLogin(false);
+        setHasChangedPassword(true);
       }
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
-      setMessage(err.response?.data?.message || 'Error changing password');
+      if (err.response && err.response.status === 401) {
+        handleLogout(); // Log out on session expiration
+      } else {
+        setMessage(err.response?.data?.message || 'Error changing password');
+      }
     }
   };
 
   const handleBackToLogin = () => {
-    // Clear any stored authentication data
-    localStorage.removeItem('token');
-    onLogout();
-    navigate('/login');
-  };
-
-  const handleLogout = () => {
     localStorage.removeItem('token');
     onLogout();
     navigate('/login');
@@ -152,6 +154,11 @@ const UserDashboard = ({ onLogout }) => {
       <button onClick={handleLogout} className="bg-red-500">
         Logout
       </button>
+
+      {/* Show CountdownTimer only if password has been changed after first login */}
+      {hasChangedPassword && (
+        <CountdownTimer initialTime={1 * 60 * 1000} onTimeout={handleLogout} />
+      )}
     </div>
   );
 };
