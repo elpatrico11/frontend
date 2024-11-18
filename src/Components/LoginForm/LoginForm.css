@@ -60,3 +60,32 @@ form{
     flex-direction: column;
 }
 
+p {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Additional styles for lockout message */
+.lockout-section {
+    margin-top: 10px;
+}
+
+.lockout-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #ff4d4d;
+    transition: width 1s linear;
+}
