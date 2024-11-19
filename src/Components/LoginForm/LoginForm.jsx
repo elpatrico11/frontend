@@ -1,3 +1,4 @@
+// frontend/src/Components/LoginForm/LoginForm.jsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './LoginForm.css';
@@ -7,14 +8,33 @@ const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaQuestion, setCaptchaQuestion] = useState('');
   const [otpRequired, setOtpRequired] = useState(false);
   const [userId, setUserId] = useState(null);
   const [error, setError] = useState('');
   
-  // New state variables for lockout
+  // State variables for lockout
   const [isLocked, setIsLocked] = useState(false);
   const [lockoutEndTime, setLockoutEndTime] = useState(null);
   const [remainingTime, setRemainingTime] = useState(0);
+
+  useEffect(() => {
+    // Fetch CAPTCHA when the component mounts
+    const fetchCaptcha = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/auth/captcha');
+        setCaptchaQuestion(response.data.question);
+        setCaptchaToken(response.data.captchaToken);
+      } catch (err) {
+        console.error("Error fetching CAPTCHA:", err);
+        setError("Failed to load CAPTCHA. Please try again.");
+      }
+    };
+
+    fetchCaptcha();
+  }, []);
 
   useEffect(() => {
     let timer;
@@ -40,7 +60,14 @@ const LoginForm = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+      const payload = {
+        username,
+        password,
+        captchaAnswer,
+        captchaToken,
+      };
+
+      const response = await axios.post('http://localhost:5000/api/auth/login', payload);
       
       if (response.data.otpRequired) {
         setOtpRequired(true);
@@ -60,6 +87,16 @@ const LoginForm = ({ onLogin }) => {
       } else {
         setError('Error during login');
       }
+
+      // Refresh CAPTCHA on failed login attempts
+      try {
+        const captchaResponse = await axios.get('http://localhost:5000/api/auth/captcha');
+        setCaptchaQuestion(captchaResponse.data.question);
+        setCaptchaToken(captchaResponse.data.captchaToken);
+        setCaptchaAnswer(''); // Clear previous answer
+      } catch (err) {
+        console.error("Error refreshing CAPTCHA:", err);
+      }
     }
   };
 
@@ -68,12 +105,17 @@ const LoginForm = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/verify-otp', { userId, otp });
+      const payload = {
+        userId,
+        otp,
+      };
+      const response = await axios.post('http://localhost:5000/api/auth/verify-otp', payload);
       const { token, role } = response.data;
       localStorage.setItem('token', token);
       onLogin(role, token, false);
     } catch (error) {
       setError(error.response?.data?.message || 'Invalid OTP');
+      // Optionally, you can handle OTP retries or lockouts here
     }
   };
 
@@ -102,6 +144,18 @@ const LoginForm = ({ onLogin }) => {
             disabled={otpRequired || isLocked} // Disable if OTP is required or locked
           />
           <FaLock className='icon' />
+        </div>
+        {/* CAPTCHA Section */}
+        <div className="input-box">
+          <label className="captcha-label">{captchaQuestion}</label>
+          <input
+            type="text"
+            placeholder="Your Answer"
+            required
+            value={captchaAnswer}
+            onChange={(e) => setCaptchaAnswer(e.target.value)}
+            disabled={otpRequired || isLocked}
+          />
         </div>
         {otpRequired && (
           <div className="input-box">

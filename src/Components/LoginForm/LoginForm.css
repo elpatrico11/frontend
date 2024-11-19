@@ -89,3 +89,9 @@ p {
     background-color: #ff4d4d;
     transition: width 1s linear;
 }
+
+.captcha-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
