@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+// UserDashboard.jsx
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CountdownTimer from '../CountdownTimer/CountdownTimer';
+import ReCAPTCHA from 'react-google-recaptcha'; // Import ReCAPTCHA
 import './UserDashboard.css';
 
 const UserDashboard = ({ onLogout }) => {
@@ -11,6 +14,9 @@ const UserDashboard = ({ onLogout }) => {
   const [message, setMessage] = useState('');
   const [isFirstLogin, setIsFirstLogin] = useState(false);
   const [hasChangedPassword, setHasChangedPassword] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null); // State to store reCAPTCHA token
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const recaptchaRef = useRef(null); // Ref for resetting reCAPTCHA
   const navigate = useNavigate();
 
   const handleLogout = useCallback(() => {
@@ -41,16 +47,31 @@ const UserDashboard = ({ onLogout }) => {
     checkUserStatus();
   }, [handleLogout]);
 
+  const handleRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
+    console.log("reCAPTCHA Token changed:", token);
+  };
+
+  const handleRecaptchaError = () => {
+    setMessage('reCAPTCHA failed to load. Please try again.');
+    console.error('reCAPTCHA failed to load.');
+  };
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       setMessage('New passwords do not match');
       return;
     }
+    if (!recaptchaToken) {
+      setMessage('Please complete the reCAPTCHA verification.');
+      return;
+    }
     try {
+      setIsSubmitting(true);
       const token = localStorage.getItem('token');
       const response = await axios.post('http://localhost:5000/api/user/change-password', 
-        { oldPassword, newPassword, isFirstLogin },
+        { oldPassword, newPassword, recaptchaToken, isFirstLogin },
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       setMessage(response.data.message);
@@ -61,12 +82,22 @@ const UserDashboard = ({ onLogout }) => {
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
+      setRecaptchaToken(null); // Clear reCAPTCHA token
+
+      // Reset reCAPTCHA after successful submission
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+        console.log("reCAPTCHA reset successfully");
+      }
     } catch (err) {
       if (err.response && err.response.status === 401) {
         handleLogout(); // Log out on session expiration
       } else {
         setMessage(err.response?.data?.message || 'Error changing password');
+        console.log("Error changing password:", err);
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -105,8 +136,15 @@ const UserDashboard = ({ onLogout }) => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          <button type="submit" className="bg-blue-500">
-            Change Password
+          {/* reCAPTCHA Widget */}
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey="6LdgvYMqAAAAACyk1kT0FuE6ApzrV0DdxAd1DfWP" // Replace with your actual Site Key
+            onChange={handleRecaptchaChange}
+            onErrored={handleRecaptchaError}
+          />
+          <button type="submit" className="bg-blue-500" disabled={isSubmitting}>
+            {isSubmitting ? 'Changing Password...' : 'Change Password'}
           </button>
           <button type="button" onClick={handleBackToLogin} className="bg-gray-500">
             Back to Login
@@ -144,8 +182,15 @@ const UserDashboard = ({ onLogout }) => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
-        <button type="submit">
-          Change Password
+        {/* reCAPTCHA Widget */}
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey="6LdgvYMqAAAAACyk1kT0FuE6ApzrV0DdxAd1DfWP" 
+          onChange={handleRecaptchaChange}
+          onErrored={handleRecaptchaError}
+        />
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Changing Password...' : 'Change Password'}
         </button>
       </form>
       {message && (
