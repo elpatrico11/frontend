@@ -1,10 +1,9 @@
-// UserDashboard.jsx
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CountdownTimer from '../CountdownTimer/CountdownTimer';
 import ReCAPTCHA from 'react-google-recaptcha'; // Import ReCAPTCHA
+import CipherDialog from '../CipherDialog/CipherDialog'; // Import CipherDialog
 import './UserDashboard.css';
 
 const UserDashboard = ({ onLogout }) => {
@@ -16,6 +15,7 @@ const UserDashboard = ({ onLogout }) => {
   const [hasChangedPassword, setHasChangedPassword] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState(null); // State to store reCAPTCHA token
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCipherDialog, setShowCipherDialog] = useState(false); // State to control CipherDialog
   const recaptchaRef = useRef(null); // Ref for resetting reCAPTCHA
   const navigate = useNavigate();
 
@@ -24,6 +24,7 @@ const UserDashboard = ({ onLogout }) => {
     onLogout();
     navigate('/login');
   }, [onLogout, navigate]);
+
 
   useEffect(() => {
     const checkUserStatus = async () => {
@@ -35,6 +36,10 @@ const UserDashboard = ({ onLogout }) => {
 
         setIsFirstLogin(response.data.isFirstLogin);
         setHasChangedPassword(response.data.hasChangedPassword);
+
+        if (!response.data.hasSolvedCipher) {
+          setShowCipherDialog(true);
+        }
       } catch (err) {
         if (err.response && err.response.status === 401) {
           handleLogout(); // Log out on session expiration
@@ -101,61 +106,13 @@ const UserDashboard = ({ onLogout }) => {
     }
   };
 
-  const handleBackToLogin = () => {
-    localStorage.removeItem('token');
-    onLogout();
-    navigate('/login');
+  const handleCipherSuccess = () => {
+    setShowCipherDialog(false);
   };
 
-  if (isFirstLogin) {
-    return (
-      <div className="user-dashboard-container">
-        <h1>Password Change Required</h1>
-        <p className="user-dashboard-instructions">
-          Please change your password before accessing the system.
-        </p>
-        <form onSubmit={handleChangePassword} className="mb-4">
-          <input
-            type="password"
-            placeholder="Old Password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirm New Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          {/* reCAPTCHA Widget */}
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey="6LdgvYMqAAAAACyk1kT0FuE6ApzrV0DdxAd1DfWP" // Replace with your actual Site Key
-            onChange={handleRecaptchaChange}
-            onErrored={handleRecaptchaError}
-          />
-          <button type="submit" className="bg-blue-500" disabled={isSubmitting}>
-            {isSubmitting ? 'Changing Password...' : 'Change Password'}
-          </button>
-          <button type="button" onClick={handleBackToLogin} className="bg-gray-500">
-            Back to Login
-          </button>
-        </form>
-        {message && (
-          <p className="user-dashboard-message">{message}</p>
-        )}
-      </div>
-    );
-  }
+  const handleCipherClose = () => {
+    setShowCipherDialog(false);
+  };
 
   return (
     <div className="user-dashboard-container">
@@ -185,7 +142,7 @@ const UserDashboard = ({ onLogout }) => {
         {/* reCAPTCHA Widget */}
         <ReCAPTCHA
           ref={recaptchaRef}
-          sitekey="6LdgvYMqAAAAACyk1kT0FuE6ApzrV0DdxAd1DfWP" 
+          sitekey="" // Zamień na swój rzeczywisty Site Key
           onChange={handleRecaptchaChange}
           onErrored={handleRecaptchaError}
         />
@@ -204,6 +161,12 @@ const UserDashboard = ({ onLogout }) => {
       {hasChangedPassword && (
         <CountdownTimer initialTime={1 * 60 * 1000} onTimeout={handleLogout} />
       )}
+
+      {/* Cipher Dialog */}
+      {showCipherDialog && (
+        <CipherDialog onClose={handleCipherClose} onSuccess={handleCipherSuccess} />
+      )}
+
     </div>
   );
 };
